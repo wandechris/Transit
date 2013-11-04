@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="shortcut icon" href="../../assets/ico/favicon.png">
+
+<title>Bus Transit</title>
+
+<!-- Bootstrap core CSS -->
+<link href="css/bootstrap.css" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+<script src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script language="javascript" src='script/ajax.util.js'></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+<!-- Custom styles for this template -->
+<link href="css/navbar.css" rel="stylesheet">
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+      <script src="../../assets/js/html5shiv.js"></script>
+      <script src="../../assets/js/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+	<div class="container">
+
+		<!-- Static navbar -->
+		<div class="navbar navbar-default">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">Transit</a>
+			</div>
+		</div>
+
+		<!-- Main component for a primary marketing message or call to action -->
+		<div id="map" class="jumbotron"></div>
+		<div id="vehicle"></div>
+		<div id="nvehicle"></div>
+		<div id="svehicle"></div>
+		<br>
+		<h2>
+			<b>Bus Details:</b>
+		</h2>
+		<br> <br>
+		<div id="details" class="row">No bus yet</div>
+		<br>
+		<h2>
+			<b>Bus Charts:</b>
+		</h2>
+		<div id="piechart" style="width: 900px; height: 500px;"></div>
+		<div id="piechart2" style="width: 900px; height: 500px;"></div>
+		<div id="piechart3" style="width: 900px; height: 500px;"></div>
+		<br>
+		<h2>
+			<b>Bus Statistics:</b>
+		</h2>
+		<br>
+		<div id="totalvehicle"></div>
+		<div id="totalvehicleN"></div>
+		<div id="totalvehicleS"></div>
+		<br>
+		<div class="col-md-4">
+			<div id="MbusN"></div>
+			<br>
+		</div>
+		<div class="col-md-4">
+			<div id="MbusS"></div>
+			<br>
+		</div>
+		<div class="col-md-4">
+			<div id="AbusN"></div>
+			<br>
+		</div>
+		<div class="col-md-4">
+			<div id="AbusS"></div>
+			<br>
+		</div>
+		<div class="col-md-4">
+			<div id="EbusN"></div>
+			<br>
+		</div>
+		<div class="col-md-4">
+			<div id="EbusS"></div>
+			<br>
+		</div>
+		<div class="col-md-4">
+			<div id="NbusN"></div>
+			<br>
+		</div>
+		<div class="col-md-4">
+			<div id="NbusS"></div>
+		</div>
+
+
+	</div>
+
+	<!-- /container -->
+	<script type="text/javascript">
+			var image = {
+				url : 'images/bus.png',
+				// This marker is 20 pixels wide by 32 pixels tall.
+				//size : new google.maps.Size(20, 32),
+				// The origin for this image is 0,0.
+				origin : new google.maps.Point(0, 0),
+				// The anchor for this image is the base of the flagpole at 0,32.
+				anchor : new google.maps.Point(0, 32)
+			};
+			var map = new google.maps.Map(document.getElementById('map'), {
+				zoom : 12,
+				center : new google.maps.LatLng(33.7528383, -84.3898637),
+				mapTypeId : google.maps.MapTypeId.ROADMAP
+			});
+
+			var infowindow = new google.maps.InfoWindow();
+			setInterval(function() {
+				setTimeout(function() {
+					loadData();
+					
+				}, 500);
+			}, 1000);
+			
+			
+			
+			
+			var marker, i;
+			var url = "data2.json";//"proxy.php";
+			var name;
+			var lat;
+			var lon;
+			var direction;
+			var adhere;
+			var currentLoc;
+			var upDate;
+			
+			var marker;
+			var myLatLng;
+			var oldMarkers = [];
+			var totalVehicles = [];
+			var vehicles = [];
+			var nvehicles = [];
+			var totalVehiclesN = [];
+			var totalVehiclesS = [];
+			var svehicles = [];
+			var morning = [];
+			var afternoon = [];
+			var evening = [];
+			var night = [];
+			var currentDate = new Date();
+		    
+		    var morningSouthDir =0 ;
+		    var morningNorthDir = 0;
+		    
+		    var afternoonSouthDir =0;
+		    var afternoonNorthDir =0 ;
+		    
+		    var eveningSouthDir =0;
+		    var eveningNorthDir =0;
+		    
+		    var nightSouthDir =0;
+		    var nightNorthDir =0;
+		    
+		    
+		    
+		    
+		    function inArray (value, array) {
+		      return array.indexOf(value) > -1 ? true : false;
+			}
+			
+				
+			function loadData() {
+				jQuery.support.cors = true;
+				$.getJSON(url, function(response) {
+					handleData(response);
+				});
+			}
+			
+			
+		
+					
+			function adheree (value) {
+				var x;
+				if(value < 0){
+					x = Math.abs(value);
+					return x+"mins late";
+				}else if(value == 0){
+					return "on Time";
+				}else
+			      return value+"mins early";
+			}
+			
+
+
+			function handleData(response) {
+				var n;
+					nvehicles = [];
+					svehicles = [];
+					vehicles = [];
+					$("#details").html("");
+				
+				
+				
+
+					if(oldMarkers && oldMarkers.length !== 0) {
+						for(var i = 0; i < oldMarkers.length; ++i) {
+							oldMarkers[i].setMap(null); 
+						}
+					}//alert(name);
+				for(var i = 0; i < response.length; i++) {
+					name = response[i].VEHICLE;
+					direction = response[i].DIRECTION;
+					adhere = response[i].ADHERENCE;
+					lat = response[i].LATITUDE;
+					lon = response[i].LONGITUDE;
+					upDate = response[i].MSGTIME;
+					currentLoc = response[i].TIMEPOINT;
+					myLatLng = new google.maps.LatLng(lat, lon);
+					marker = new google.maps.Marker({
+						position : myLatLng,
+						icon : image,
+						map : map,
+						title : "Bus Number: "+ name,
+						zIndex : 1
+					});
+					
+					
+					if (inArray(name, vehicles)) {
+						
+						}else{
+							save(name, direction, adhere,lat,lon,upDate,currentLoc, currentDate);
+							vehicles.push(name);
+							if (direction == "Northbound"){
+								nvehicles.push(name);
+						    }else{
+						    	svehicles.push(name);
+						     }
+							$("#details").append("<div class="+"col-md-4"+"><b>Bus Number: </b>"+name+"<br><b>Current Location: </b> "+currentLoc+"<br> <b>Late or Early: </b> "+adheree(adhere)+" <br> <b>Heading: </b> "+direction+"<br> <b>Last Update: </b> "+upDate+"<br><br></div>");
+						}
+				}						
+					oldMarkers.push( marker );
+					
+					$("#nvehicle").html("<b>Number of bus NorthBound : </b>" + nvehicles.length);
+					$("#svehicle").html("<b>Number of bus SouthBound : </b>" + svehicles.length);
+				   	$("#vehicle").html("<b>Number of bus on Map : </b> " + vehicles.length);
+					}
+			
+			
+			getData("/transit",function(response) {
+				workData(response);
+			},null);
+			
+			function workData(response) {
+				
+				var data;
+				var cdate;
+				var date;
+			    var month;
+			    var year;
+			    var today;
+			    var tomorrow;
+			    var hour;
+			    var nxthour;
+				data = response.data;
+				//console.log(data);
+				for(var i = 0; i < data.length; i++) {
+					name = data[i].name;
+					direction = data[i].direction;
+					adhere = data[i].adherence;
+					lat = data[i].latitude;
+					lon = data[i].longitude;
+					upDate = data[i].msgTime;
+					currentLoc = data[i].timePoint;
+					cdate = data[i].date;
+					
+					if(cdate == currentDate){
+					
+					totalVehicles.push(name);	
+					
+					if (direction == "Northbound"){
+						
+					totalVehiclesN.push(name);
+					
+					}else{
+						
+			        	totalVehiclesS.push(name);
+				     }
+					var t = new Date(cdate);
+					
+					date = t.getDate();
+				    month = t.getMonth() + 1;
+				    year = t.getFullYear();
+				    today = date+"/"+month+"/"+year;
+				    tomorrow = ((t.getDay() + 1)% 7);
+				    hour = t.getHours();
+				    nxthour = t.getHours()+1;
+				    
+				    if (hour <= 6) {
+						night.push(name);
+						if (direction == "Northbound"){
+							nightNorthDir = nightNorthDir + 1;
+						}else{
+							nightSouthDir = nightSouthDir + 1;
+						}
+					}
+					if (hour > 6 && hour <= 12) {
+						morning.push(name);
+						if (direction == "Northbound"){
+							morningNorthDir = morningNorthDir + 1;
+						}else{
+							morningSouthDir = morningSouthDir + 1;
+						}
+					}if (hour > 12 && hour <= 18) {
+						afternoon.push(name);
+						if (direction == "Northbound"){
+							afternoonNorthDir = afternoonNorthDir + 1;
+						}else{
+							afternoonSouthDir = afternoonSouthDir + 1;
+						}
+					}
+					if (hour > 18 && hour <= 24) {
+						evening.push(name);
+						if (direction == "Northbound"){
+							eveningNorthDir = eveningNorthDir + 1;
+						}else{
+							eveningSouthDir = eveningSouthDir + 1;
+						}
+					}
+					
+					
+				}
+				}
+				
+				
+				
+				$("#totalvehicleN").html("<b>Total Number of buses NorthBound today : </b>" + totalVehiclesN.length);
+				$("#totalvehicleS").html("<b>Total Number of buses SouthBound today : </b>" + totalVehiclesS.length);
+			   	$("#totalvehicle").html("<b>Total Number of buses today : </b> " + totalVehicles.length);	
+			   	
+			   	$("#nvehicle").html("<b>Number of bus NorthBound : </b>" + nvehicles.length);
+				$("#svehicle").html("<b>Number of bus SouthBound : </b>" + svehicles.length);
+			   	$("#vehicle").html("<b>Number of bus on Map : </b> " + vehicles.length);
+			   	
+			   	$("#MbusS").html("<b>Number of Morning bus SouthBound : </b>" + morningSouthDir);
+			   	$("#MbusN").html("<b>Number of Morning bus NorthBound : </b>" + morningNorthDir);
+			   	$("#AbusS").html("<b>Number of Afternoon bus SouthBound : </b>" + afternoonSouthDir);
+			   	$("#AbusN").html("<b>Number of Afternoon bus NorthBound : </b>" + afternoonNorthDir);
+			   	$("#EbusS").html("<b>Number of Evening bus SouthBound : </b>" + eveningSouthDir);
+			   	$("#EbusN").html("<b>Number of Evening bus NorthBound : </b>" + eveningNorthDir);
+			   	$("#NbusS").html("<b>Number of Night bus SouthBound : </b>" + nightSouthDir);
+			   	$("#NbusN").html("<b>Number of Night bus NorthBound : </b>" + nightNorthDir);
+			}
+			
+			google.load("visualization", "1", {packages:["corechart"]});
+		      google.setOnLoadCallback(drawChart);
+		      function drawChart() {
+		        var data = google.visualization.arrayToDataTable([
+		          ['Transit', 'Northbound','Southbound'],
+			      ['Morning' , 3,9], 
+		          ['Afternoon',    9,  8],
+		          ['Evening',   5,   2],
+		          ['Night', 4, 2]
+		        ]);
+		        
+		        var data2 = google.visualization.arrayToDataTable([
+		                                        		          ['Transit', 'direction'],
+		                                        			      ['Northbound',9], 
+		                                        		          ['Southbound',8]
+		                                        		        ]);
+		        
+		        var data3 = google.visualization.arrayToDataTable([
+			                                        		          ['Transit', 'Number of cars'],
+			                                        		          ['Morning',9], 
+			                                        		          ['Afternoon',8],
+			                                        		          ['Evening',2],
+			                                        		          ['Night',2]
+			                                        		        ]);
+
+		        var options = {
+		          title: 'Transit',
+		          'isStacked': true,
+		          vAxis: {title: 'Number of buses',  titleTextStyle: {color: 'red'}}
+		        };
+		        
+
+		        var chart = new google.visualization.ColumnChart(document.getElementById('piechart'));
+		        chart.draw(data, options);
+		        
+		        var chart = new google.visualization.PieChart(document.getElementById('piechart2'));
+		        chart.draw(data2, options);
+		        
+		        var chart = new google.visualization.PieChart(document.getElementById('piechart3'));
+		        chart.draw(data3, options);
+		      }
+				
+				
+		</script>
+
+
+	<!-- Bootstrap core JavaScript
+    ================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<script src="../../assets/js/jquery.js"></script>
+	<script src="../../dist/js/bootstrap.min.js"></script>
+</body>
+</html>
