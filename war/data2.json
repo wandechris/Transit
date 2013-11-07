@@ -10,19 +10,6 @@
 		"STOPID": "905889",
 		"TIMEPOINT": "Buckhead Station",
 		"TRIPID": "3842577",
-		"VEHICLE": "2000"
-	},{
-		"ADHERENCE": "-1",
-		"BLOCKID": "31",
-		"BLOCK_ABBR": "110-3",
-		"DIRECTION": "Southbound",
-		"LATITUDE": "33.8372064",
-		"LONGITUDE": "-84.3813504",
-		"MSGTIME": "10\/2\/2013 11:16:02 AM",
-		"ROUTE": "110",
-		"STOPID": "905889",
-		"TIMEPOINT": "Buckhead Station",
-		"TRIPID": "3842577",
 		"VEHICLE": "20000"
 	},{
 		"ADHERENCE": "-1",

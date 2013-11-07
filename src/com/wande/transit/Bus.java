@@ -29,6 +29,7 @@ public class Bus {
 	private String TIMEPOINT;
 	private String TRIPID;
 	private String DATE;
+	private String HOUR;
 	
 	
 
@@ -213,7 +214,7 @@ public class Bus {
 	}
 
 	public Bus create (String name, String adh, String blocki, String blocka, String dir, String lat, String lon,
-			String msg, String route, String stop, String time, String trip, String date){
+			String msg, String route, String stop, String time, String trip, String date,String hour){
 		Bus g = new Bus();
 		g.setVEHICLE(name);
 		g.setADHERENCE(adh);
@@ -228,6 +229,8 @@ public class Bus {
 		g.setTIMEPOINT(time);
 		g.setTRIPID(trip);
 		g.setDATE(date);
+		g.setHOUR(hour);
+		
 		return g;
 		
 	}
@@ -239,4 +242,13 @@ public class Bus {
 	public void setDATE(String dATE) {
 		DATE = dATE;
 	}
+
+	public String getHOUR() {
+		return HOUR;
+	}
+
+	public void setHOUR(String hOUR) {
+		HOUR = hOUR;
+	}
+	
 }

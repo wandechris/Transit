@@ -77,8 +77,9 @@ public class TransitServlet extends BaseServlet {
     String timepoint = req.getParameter("timepoint");
     String tripId = req.getParameter("tripId");
     String date = req.getParameter("date");
+    String hour = req.getParameter("hour");
     Bus bus = new Bus();
-    Transit.createOrUpdateCustomer(bus.create(name, adherence, blockId, blockAbbr, direction, latitude, longitude, msgTime, route, stopId, timepoint, tripId, date));
+    Transit.createOrUpdateCustomer(bus.create(name, adherence, blockId, blockAbbr, direction, latitude, longitude, msgTime, route, stopId, timepoint, tripId, date,hour));
   }
 
 	/**
