@@ -138,7 +138,8 @@ public class Util {
 	 * @return List all entities of a kind from the cache or datastore (if not in
 	 *         cache) with the specified properties
 	 */
-  public static Iterable<Entity> listEntities(String kind, String searchBy, String searchFor) {
+  @SuppressWarnings("deprecation")
+public static Iterable<Entity> listEntities(String kind, String searchBy, String searchFor) {
     logger.log(Level.INFO, "Search entities based on search criteria");
     Query query = new Query(kind);
     if (searchFor != null && !"".equals(searchFor)) {
@@ -155,7 +156,8 @@ public class Util {
 	 * @param ancestor : the parent key of the entity group where we need to search
 	 * @return iterable with all children of the parent of the specified kind
 	 */
-  public static Iterable<Entity> listChildren(String kind, Key ancestor) {
+  @SuppressWarnings("deprecation")
+public static Iterable<Entity> listChildren(String kind, Key ancestor) {
     logger.log(Level.INFO, "Search entities based on parent");
     Query query = new Query(kind);
     query.setAncestor(ancestor);
@@ -171,7 +173,8 @@ public class Util {
 	 * @param ancestor : Parent key of the entity group that needs to be searched for
 	 * @return an iterable with keys of children
 	 */
-  public static Iterable<Entity> listChildKeys(String kind, Key ancestor) {
+  @SuppressWarnings("deprecation")
+public static Iterable<Entity> listChildKeys(String kind, Key ancestor) {
     logger.log(Level.INFO, "Search entities based on parent");
     Query query = new Query(kind);
     query.setAncestor(ancestor).setKeysOnly();

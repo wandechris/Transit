@@ -6,24 +6,36 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import javax.servlet.ServletException;
-import javax.servlet.http.*;
-@SuppressWarnings("serial")
-public class DataServlet extends HttpServlet {
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+@SuppressWarnings("serial")
+public class SaveServlet extends HttpServlet{
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
-		StringBuffer res = null;
 		
-		/*JsonElement name = null;
+		JsonElement name = null;
 		JsonArray  arry = null;
-		
+		StringBuffer res = null;
 		
 		DateFormat dateFormat = new SimpleDateFormat("d/MM/yyyy");
 	       //get current date time with Date()
 	       Date date = new Date();
 	       Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
-			calendar.setTime(date); */
+			calendar.setTime(date); 
 
 		PrintWriter out = resp.getWriter();
 		try {
@@ -41,7 +53,7 @@ public class DataServlet extends HttpServlet {
 		            res.append(line);
 		        }
 		        
-		   /*     JsonParser parser = new JsonParser();
+		        JsonParser parser = new JsonParser();
 		        Object obj = parser.parse(res.toString());
 		        
 		        
@@ -69,7 +81,7 @@ public class DataServlet extends HttpServlet {
 			            Transit.createOrUpdateCustomer(bus.create(name.getAsString(), adherence.getAsString(), blockId.getAsString(), blockAbbr.getAsString(), direction.getAsString(), latitude.getAsString(), longitude.getAsString(), msgTime.getAsString(), route.getAsString(), stopId.getAsString(), timepoint.getAsString(), tripId.getAsString(), date2, hour));
 		        	 
 		      }
-		        */
+		        
 		      reader.close();
 		        //int count = jsonObj.getInt("count");
 		        
@@ -81,7 +93,7 @@ public class DataServlet extends HttpServlet {
 		} catch (Exception e) {
 		}
 		
-		out.println(res);
+		out.println("ok");
 	}
 
 	@Override
@@ -89,4 +101,5 @@ public class DataServlet extends HttpServlet {
 			throws ServletException, IOException {
 		doGet(req, resp);
 	}
+
 }

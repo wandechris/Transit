@@ -59,6 +59,7 @@ public class Transit {
     	bus2.setProperty("timepoint", bus.getTIMEPOINT());
     	bus2.setProperty("tripId", bus.getTRIPID());
     	bus2.setProperty("date", bus.getDATE());
+    	bus2.setProperty("hour", bus.getHOUR());
     } else {
       if (bus.getVEHICLE() != null && !"".equals(bus.getVEHICLE())) {
         bus2.setProperty("name", bus.getVEHICLE());

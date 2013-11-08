@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cronentries>
   <cron>
-    <url>/data</url>
-    <description>Calls the webpage /count every minute</description>
-    <schedule>every 1 minutes</schedule>
+    <url>/save</url>
+    <description>Calls the webpage /save every minute</description>
+    <schedule>every 5 minutes</schedule>
   </cron>
 </cronentries> 
