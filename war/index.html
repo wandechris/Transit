@@ -91,7 +91,7 @@
 			
 			
 			var marker, i;
-			var url = "/data"
+			var url = "/transit"
 			var name;
 			var lat;
 			var lon;
@@ -212,10 +212,11 @@
 						}
 					oldMarkers.push( marker );
 				}
-			}
 				$("#nvehicle").html("<b>Number of bus NorthBound : </b>" + nvehicles.length);
 				$("#svehicle").html("<b>Number of bus SouthBound : </b>" + svehicles.length);
 			   	$("#vehicle").html("<b>Number of bus on Map : </b> " + vehicles.length);
+			}
+				
 										
 					
 					
@@ -229,7 +230,7 @@
 			
 			function workData(response) {
 				
-				var data;
+				var dataa;
 				var cdate;
 				var date;
 			    var month;
@@ -238,26 +239,29 @@
 			    var tomorrow;
 			    var hour;
 			    var nxthour;
-				data = response.data;
+				dataa = response.data;
 				//console.log(data);
-				for(var i = 0; i < data.length; i++) {
-					name = data[i].name;
-					direction = data[i].direction;
-					adhere = data[i].adherence;
-					lat = data[i].latitude;
-					lon = data[i].longitude;
-					upDate = data[i].msgTime;
-					currentLoc = data[i].timePoint;
-					cdate = data[i].date;
-					hour = data[i].hour;
+				for(var i = 0; i < dataa.length; i++) {
+					name = dataa[i].name;
+					//console.log(name);
+					direction = dataa[i].direction;
+					adhere = dataa[i].adherence;
+					lat = dataa[i].latitude;
+					lon = dataa[i].longitude;
+					upDate = dataa[i].msgTime;
+					currentLoc = dataa[i].timePoint;
+					cdate = dataa[i].date;
+					
+					hour = dataa[i].hour;
 					
 					var ty = today2.toString();
-					
+					//console.log("current"+ty);
+					console.log("old"+cdate);
 					if(cdate == ty){
 						
 					
 					totalVehicles.push(name);	
-					
+					console.log(totalVehicles);
 					if (direction == "Northbound"){
 						
 					totalVehiclesN.push(name);

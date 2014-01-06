@@ -31,7 +31,7 @@ public class SaveServlet extends HttpServlet{
 		JsonArray  arry = null;
 		StringBuffer res = null;
 		
-		DateFormat dateFormat = new SimpleDateFormat("d/MM/yyyy");
+		DateFormat dateFormat = new SimpleDateFormat("d/M/yyyy");
 	       //get current date time with Date()
 	       Date date = new Date();
 	       Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance

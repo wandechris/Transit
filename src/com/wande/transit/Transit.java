@@ -43,8 +43,8 @@ public class Transit {
 	 *         
 	 */
   public static void createOrUpdateCustomer(Bus bus) {
-    Entity bus2 = getSingleCustomer(bus.getVEHICLE());
-    if (bus2 == null) {
+    Entity bus2; //= getSingleCustomer(bus.getVEHICLE());
+  //  if (bus2 == null) {
     	bus2 = new Entity("bus", bus.getVEHICLE());
     	bus2.setProperty("name", bus.getVEHICLE());
     	bus2.setProperty("adherence", bus.getADHERENCE());
@@ -60,7 +60,7 @@ public class Transit {
     	bus2.setProperty("tripId", bus.getTRIPID());
     	bus2.setProperty("date", bus.getDATE());
     	bus2.setProperty("hour", bus.getHOUR());
-    } else {
+   /* } else {
       if (bus.getVEHICLE() != null && !"".equals(bus.getVEHICLE())) {
         bus2.setProperty("name", bus.getVEHICLE());
       }
@@ -97,7 +97,10 @@ public class Transit {
       if (bus.getTRIPID() != null && !"".equals(bus.getTRIPID())) {
     	  bus2.setProperty("tripId", bus.getTRIPID());
       }
-    }
+      if (bus.getDATE() != null && !"".equals(bus.getDATE())) {
+    	  bus2.setProperty("date", bus.getDATE());
+      }
+    }*/
     Util.persistEntity(bus2);
   }
 
