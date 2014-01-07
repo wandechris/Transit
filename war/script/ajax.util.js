@@ -174,7 +174,7 @@ var getData=function(url,successFn,errorFn){
 		url : url,
 		type : "GET",
 		success : function(resp) {
-			console.log(resp);
+		//	console.log(resp);
 			//calling the user defined success function
 			if(successFn)
 			successFn(resp);	
